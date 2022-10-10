@@ -28,7 +28,7 @@ void AMenuMapLevelScriptActor::BeginPlay()
 		const float Angle = (float) i / 8 * (2 * PI);
 		
 		FVector Position(  -FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, FloorHeight);
-		FRotator Rotation(0, 0, Angle / PI * 180);
+		FRotator Rotation(0, -Angle / PI * 180, 0);
 		AMenuDoorway* Doorway = Cast<AMenuDoorway>(UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), AMenuDoorway::StaticClass(), FTransform(Rotation, Position)));
 		FText Name = FText::FromString(FString::Printf(TEXT("Level %d"), i + 1));
 		Doorway->SetupDoorway(Name);

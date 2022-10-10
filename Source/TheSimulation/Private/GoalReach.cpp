@@ -20,7 +20,7 @@ AGoalReach::AGoalReach()
 	SetRootComponent(Mesh);
 	
 	TouchTrigger = CreateDefaultSubobject<UBoxComponent>("Touch Trigger");
-	TouchTrigger->InitBoxExtent(FVector(240, 240, 200));
+	TouchTrigger->InitBoxExtent(FVector(120, 120, 180)); // Looks like this parameter is half-size
 	TouchTrigger->SetRelativeLocation(FVector(0,0,100));
 	TouchTrigger->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	TouchTrigger->SetupAttachment(Mesh);

@@ -25,7 +25,7 @@ public:
 	void SetPlayerLevel(const int Level) const;
 
 public:
-	const int AvailableLevels = 1;
+	const int AvailableLevels = 3;
 
 private:
 	UFUNCTION()
