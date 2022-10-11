@@ -17,24 +17,31 @@ class UTheSimulationGameInstance final : public UGameInstance
 public:
 	UPROPERTY()
 	int CurrentGameLevel;
-	
+
+public:
 	UFUNCTION()
 	int GetPlayerLevel() const;
 
 	UFUNCTION()
 	void SetPlayerLevel(const int Level) const;
 
+	UFUNCTION()
+	int GetLevel2Attempts() const;
+
+	UFUNCTION()
+	void SetLevel2Attempts(const int Attempts) const;
+
 public:
 	const int AvailableLevels = 3;
 
 private:
-	UFUNCTION()
-	UTheSimulationSaveGame* InitializeAndLoadSaveGame() const;
+	template<class SaveGameType>
+	SaveGameType* InitializeAndLoadSaveGame(TSubclassOf<USaveGame> SaveGameClass, const FString& SlotName) const;
 
-	UFUNCTION()
-	void SaveGame(UTheSimulationSaveGame* SaveGame) const;
+	template<class SaveGameType>
+	static void SaveGame(SaveGameType* SaveGame, const FString& SlotName);
 
 private:
-	UPROPERTY()
-	FString SaveGameSlot = TEXT("Default");
+	const FString MainSaveGameSlot = TEXT("Default");
+	const FString Level2SaveGameSlot = TEXT("Level2");
 };

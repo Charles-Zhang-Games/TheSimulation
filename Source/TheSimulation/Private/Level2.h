@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/LevelScriptActor.h"
+#include "Engine/StaticMeshActor.h"
 #include "WorldPartition/DataLayer/ActorDataLayer.h"
 #include "Level2.generated.h"
 
@@ -22,6 +23,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FActorDataLayer NewWorldLayer;
+
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<AStaticMeshActor> DifficultPlatform;
 
 private:
 	UFUNCTION(BlueprintCallable)
