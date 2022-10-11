@@ -3,6 +3,7 @@
 
 #include "Level2.h"
 
+#include "TheSimulationGameInstance.h"
 #include "Engine/TriggerBox.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -33,6 +34,19 @@ void ALevel2::SwitchWorldLayer(int Index)
 	{
 		GetWorld()->GetWorldDataLayers()->SetDataLayerRuntimeState(TemplateLayer, EDataLayerRuntimeState::Loaded);
 		GetWorld()->GetWorldDataLayers()->SetDataLayerRuntimeState(NewWorldLayer, EDataLayerRuntimeState::Activated);
+
+		// Special adjust difficulty actor with gameplay tag
+		if (DifficultPlatform != nullptr)
+		{
+			int Attempts = Cast<UTheSimulationGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetLevel2Attempts();
+		
+			AStaticMeshActor* Platform = DifficultPlatform.Get();
+			FVector Position = Platform->GetActorLocation();
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *Position.ToString()); // This will not give correct in-editor location, probably due to streaming
+			// Platform->SetActorRelativeLocation(FVector(-Attempts, 0, 0));
+			// Platform->SetActorLocation(FVector(-Attempts,1450.000000,-710.000000));
+			Platform->SetActorLocation(FVector(0,+Attempts,0));
+		}
 	}
 }
 

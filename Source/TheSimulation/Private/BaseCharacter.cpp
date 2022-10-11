@@ -3,6 +3,9 @@
 
 #include "BaseCharacter.h"
 
+#include "TheSimulationGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -12,6 +15,11 @@ ABaseCharacter::ABaseCharacter()
 
 void ABaseCharacter::FellOutOfWorld(const UDamageType& dmgType)
 {
+	UTheSimulationGameInstance* GameInstance = Cast<UTheSimulationGameInstance>(
+		UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance->CurrentGameLevel == 2)
+		GameInstance->SetLevel2Attempts(GameInstance->GetLevel2Attempts() + 1);
+	
 	// Super::FellOutOfWorld(dmgType); // Don't perform default behavior
 	GetWorld()->ServerTravel("0_MenuMap");
 }

@@ -3,39 +3,54 @@
 
 #include "TheSimulationGameInstance.h"
 
+#include "Level2SaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
 int UTheSimulationGameInstance::GetPlayerLevel() const
 {
-	const UTheSimulationSaveGame* const SaveGame = InitializeAndLoadSaveGame();
+	const UTheSimulationSaveGame* const SaveGame = InitializeAndLoadSaveGame<UTheSimulationSaveGame>(UTheSimulationSaveGame::StaticClass(), MainSaveGameSlot);
 	return SaveGame->PlayerLevel;
 }
 
 void UTheSimulationGameInstance::SetPlayerLevel(const int Level) const
 {
-	UTheSimulationSaveGame* const Data = InitializeAndLoadSaveGame();
+	UTheSimulationSaveGame* const Data = InitializeAndLoadSaveGame<UTheSimulationSaveGame>(UTheSimulationSaveGame::StaticClass(), MainSaveGameSlot);
 	Data->PlayerLevel = Level;
-	SaveGame(Data);
+	SaveGame(Data, MainSaveGameSlot);
 }
 
-UTheSimulationSaveGame* UTheSimulationGameInstance::InitializeAndLoadSaveGame() const
+int UTheSimulationGameInstance::GetLevel2Attempts() const
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *SaveGameSlot);
-	if(UGameplayStatics::DoesSaveGameExist(SaveGameSlot, 0))
+	const ULevel2SaveGame* const SaveGame = InitializeAndLoadSaveGame<ULevel2SaveGame>(ULevel2SaveGame::StaticClass(), Level2SaveGameSlot);
+	return SaveGame->NumOfAttempts;
+}
+
+void UTheSimulationGameInstance::SetLevel2Attempts(const int Attempts) const
+{
+	ULevel2SaveGame* const Data = InitializeAndLoadSaveGame<ULevel2SaveGame>(ULevel2SaveGame::StaticClass(), Level2SaveGameSlot);
+	Data->NumOfAttempts = Attempts;
+	SaveGame(Data, Level2SaveGameSlot);
+}
+
+template <class SaveGameType>
+SaveGameType* UTheSimulationGameInstance::InitializeAndLoadSaveGame(const TSubclassOf<USaveGame> SaveGameClass, const FString& SlotName) const
+{
+	if(UGameplayStatics::DoesSaveGameExist(SlotName, 0))
 	{
-		UTheSimulationSaveGame* SaveGame = Cast<UTheSimulationSaveGame>(
-			UGameplayStatics::LoadGameFromSlot(SaveGameSlot, 0));
+		SaveGameType* SaveGame = Cast<SaveGameType>(
+			UGameplayStatics::LoadGameFromSlot(SlotName, 0));
 		return SaveGame;
 	}
 	else
 	{
-		USaveGame* SaveGame = UGameplayStatics::CreateSaveGameObject(UTheSimulationSaveGame::StaticClass());
-		UGameplayStatics::SaveGameToSlot(SaveGame, SaveGameSlot, 0);
-		return Cast<UTheSimulationSaveGame>(SaveGame);
+		USaveGame* SaveGame = UGameplayStatics::CreateSaveGameObject(SaveGameClass);
+		UGameplayStatics::SaveGameToSlot(SaveGame, SlotName, 0);
+		return Cast<SaveGameType>(SaveGame);
 	}
 }
 
-void UTheSimulationGameInstance::SaveGame(UTheSimulationSaveGame* SaveGame) const
+template <class SaveGameType>
+void UTheSimulationGameInstance::SaveGame(SaveGameType* SaveGame, const FString& SlotName)
 {
-	UGameplayStatics::SaveGameToSlot(SaveGame, SaveGameSlot, 0);
+	UGameplayStatics::SaveGameToSlot(SaveGame, SlotName, 0);
 }

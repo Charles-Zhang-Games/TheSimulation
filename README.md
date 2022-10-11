@@ -10,7 +10,7 @@ Levels:
 
 1. Entry map: infinite extent; Functional.
 2. TP Jump level: Basic navigation learning.
-3. TP Jump Level: Through the trapdoor. World layer test.
+3. TP Jump Level: Through the trapdoor. World layer test
 4. TP Jump with jump height reduced: Push the boxes; Physics test.
 5. Seamless Travel (https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Travelling/) - different from streaming.
 8. 2km Vehicle: Basic vehicle driving learning; Nanite pyramid.
@@ -26,3 +26,4 @@ Levels:
 11. Solar system: large world coordinates.
 12. : Dynamic interior test for open world buildings.
 	https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LevelStreaming/HowTo/StreamWithCPP/
+13. : Gameplay tag test.
