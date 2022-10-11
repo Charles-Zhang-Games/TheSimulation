@@ -10,9 +10,11 @@ Intermediate/ProjectFiles
 Intermediate/ReimportCache
 Intermediate/ShaderAutogen
 Intermediate/CachedAssetRegistry.bin
+Intermediate/Staging
 Intermediate/TargetInfo.Engine.json
 Intermediate/TargetInfo.json
 Intermediate/TargetInfo.TheSimulation.json
+Publish
 Plugins/Developer/RiderLink
 Saved/Autosaves
 Saved/AutoScreenshot.png
@@ -25,4 +27,6 @@ Saved/MaterialStatsDebug
 Saved/Logs
 Saved/SaveGames/Default.sav
 Saved/Shaders
+Saved/StagedBuilds
+Saved/Temp
 Saved/WorldPartition

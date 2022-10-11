@@ -3,8 +3,10 @@
 
 #include "Level2.h"
 
+#include "Engine/TriggerBox.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "WorldPartition/DataLayer/DataLayer.h"
 #include "WorldPartition/DataLayer/WorldDataLayers.h"
 
 void ALevel2::BeginPlay()

@@ -4,12 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/LevelScriptActor.h"
-#include "Engine/TriggerBox.h"
+#include "WorldPartition/DataLayer/ActorDataLayer.h"
 #include "Level2.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ALevel2 : public ALevelScriptActor
 {
