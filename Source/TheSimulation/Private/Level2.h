@@ -33,4 +33,9 @@ private:
 	
 	UFUNCTION()
 	void TriggerBeginOverlap(AActor* Actor, AActor* OtherActor);
+	UFUNCTION()
+	void TriggerEndOverlap(AActor* Actor, AActor* OtherActor);
+
+private:
+	bool FirstTimeLoading = true;
 };

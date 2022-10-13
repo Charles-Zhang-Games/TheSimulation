@@ -19,9 +19,7 @@ public:
 	virtual void BeginPlay() override;
 
 private:
-	AAmbientSound* PlaybackSound;
+	int MessageID;
 	FTimerHandle SoundPlayDelayHandle;
-	
-	UFUNCTION()
-	void PlayWelcomeMessage() const;
+	void PlayWelcomeMessage();
 };

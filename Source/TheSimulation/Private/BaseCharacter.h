@@ -16,4 +16,10 @@ public:
 
 public:
 	virtual void FellOutOfWorld(const UDamageType& dmgType) override;
+
+private:
+	FTimerHandle SoundPlayDelayHandle;
+	
+	UFUNCTION()
+	void PlayDeathShout() const;
 };

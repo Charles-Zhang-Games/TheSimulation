@@ -4,6 +4,8 @@
 #include "GoalReach.h"
 
 #include "TheSimulationGameInstance.h"
+#include "Components/AudioComponent.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -25,6 +27,20 @@ AGoalReach::AGoalReach()
 	TouchTrigger->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	TouchTrigger->SetupAttachment(Mesh);
 	TouchTrigger->OnComponentBeginOverlap.AddDynamic(this, &AGoalReach::BeginOverlap);
+
+	static ConstructorHelpers::FObjectFinder<USoundWave> GoalMusicSound(TEXT("SoundWave'/Game/Audios/Goal.Goal'"));
+	GoalMusic = CreateDefaultSubobject<UAudioComponent>("Goal Music");
+	GoalMusic->SetupAttachment(Mesh);
+	if (GoalMusicSound.Succeeded())
+	{
+		GoalMusic->SetSound(GoalMusicSound.Object);
+		GoalMusic->bAllowSpatialization = true;
+		GoalMusic->bOverrideAttenuation = true;
+		auto AttenuationSettings = FSoundAttenuationSettings();
+		
+		GoalMusic->AttenuationOverrides = AttenuationSettings;
+		GoalMusic->SetAutoActivate(true);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +67,11 @@ void AGoalReach::Tick(float DeltaTime)
 void AGoalReach::BeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto GameInstance = Cast<UTheSimulationGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	GameInstance->SetPlayerLevel(GameInstance->CurrentGameLevel + 1);
-	GetWorld()->ServerTravel("0_MenuMap");
+	if (OtherActor->IsA(ACharacter::StaticClass()))
+	{
+		UTheSimulationGameInstance* GameInstance = Cast<UTheSimulationGameInstance>(
+			UGameplayStatics::GetGameInstance(GetWorld()));
+		GameInstance->UnlockLevel(UnlockLevel);
+		GetWorld()->ServerTravel("0_MenuMap");	
+	}
 }

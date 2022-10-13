@@ -16,11 +16,17 @@ public:
 	// Sets default values for this actor's properties
 	AGoalReach();
 
+	UPROPERTY(EditAnywhere)
+	int UnlockLevel = 1;
+
 	UPROPERTY()
 	UStaticMeshComponent* Mesh;
 
 	UPROPERTY()
 	UBoxComponent* TouchTrigger;
+
+	UPROPERTY()
+	UAudioComponent* GoalMusic;
 
 protected:
 	// Called when the game starts or when spawned

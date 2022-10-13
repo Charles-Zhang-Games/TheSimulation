@@ -20,6 +20,7 @@ void ALevel2::BeginPlay()
 	{
 		ATriggerBox* TriggerBox = Cast<ATriggerBox>(FoundActors[0]);
 		TriggerBox->OnActorBeginOverlap.AddDynamic(this, &ALevel2::TriggerBeginOverlap);
+		TriggerBox->OnActorEndOverlap.AddDynamic(this, &ALevel2::TriggerEndOverlap);
 	}
 }
 
@@ -36,7 +37,7 @@ void ALevel2::SwitchWorldLayer(int Index)
 		GetWorld()->GetWorldDataLayers()->SetDataLayerRuntimeState(NewWorldLayer, EDataLayerRuntimeState::Activated);
 
 		// Special adjust difficulty actor with gameplay tag
-		if (DifficultPlatform != nullptr)
+		if (DifficultPlatform != nullptr && FirstTimeLoading)
 		{
 			int Attempts = Cast<UTheSimulationGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetLevel2Attempts();
 		
@@ -45,7 +46,9 @@ void ALevel2::SwitchWorldLayer(int Index)
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *Position.ToString()); // This will not give correct in-editor location, probably due to streaming
 			// Platform->SetActorRelativeLocation(FVector(-Attempts, 0, 0));
 			// Platform->SetActorLocation(FVector(-Attempts,1450.000000,-710.000000));
-			Platform->SetActorLocation(FVector(0,+Attempts,0));
+			Platform->SetActorLocation(FVector(0,+Attempts * 40,0));
+
+			FirstTimeLoading = false;
 		}
 	}
 }
@@ -63,6 +66,23 @@ void ALevel2::TriggerBeginOverlap(AActor* Actor, AActor* OtherActor)
 				SwitchWorldLayer(0);
 			else
 				SwitchWorldLayer(1);
+		}
+	}
+}
+
+void ALevel2::TriggerEndOverlap(AActor* Actor, AActor* OtherActor)
+{
+	if (OtherActor->IsA(ACharacter::StaticClass()))
+	{
+		const ATriggerBox* TriggerActor = Cast<ATriggerBox>(Actor);
+		if (TriggerActor != nullptr)
+		{
+			const auto TriggerLocation = TriggerActor->GetActorLocation();
+			const auto PawnLocation = OtherActor->GetActorLocation();
+			if (TriggerLocation.Z > PawnLocation.Z)
+				SwitchWorldLayer(1);
+			else
+				SwitchWorldLayer(0);
 		}
 	}
 }

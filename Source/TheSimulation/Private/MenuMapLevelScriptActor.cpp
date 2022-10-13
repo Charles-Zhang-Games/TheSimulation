@@ -22,8 +22,10 @@ void AMenuMapLevelScriptActor::BeginPlay()
 
 	const float FloorHeight = 400;
 	const float IncrementalCircleRadius = 500;
-	for (int i = 0; i < FMath::Min(GameInstance->GetPlayerLevel(), GameInstance->AvailableLevels); ++i)
+	for (auto& id: GameInstance->GetUnlockedLevels())
 	{
+		const int i = id - 1;
+		
 		const float Radius = IncrementalCircleRadius * (i / 8 + 1);
 		const float Angle = (float) i / 8 * (2 * PI);
 		
@@ -39,21 +41,30 @@ void AMenuMapLevelScriptActor::BeginPlay()
 	const APointLight* PointLight = GetWorld()->SpawnActor<APointLight>(FVector(0, 0, 900), FRotator(0,0,0));
 	PointLight->PointLightComponent->SetIntensity(8);
 	PointLight->PointLightComponent->SetIntensityUnits(ELightUnits::Candelas);
+	PointLight->PointLightComponent->SetLightColor(FColor(193, 241,255, 55));
 
 	// Play welcome instructions
-	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAmbientSound::StaticClass(), Actors);
-	if (Actors.Num() == 1)
-	{
-		PlaybackSound = Cast<AAmbientSound>(Actors[0]);
-		
-		GetWorldTimerManager().SetTimer(SoundPlayDelayHandle, this, &AMenuMapLevelScriptActor::PlayWelcomeMessage, 5, false);
-	}
+	MessageID = 0;
+	GetWorldTimerManager().SetTimer(SoundPlayDelayHandle, this, &AMenuMapLevelScriptActor::PlayWelcomeMessage, 3, false);
 }
 
-void AMenuMapLevelScriptActor::PlayWelcomeMessage() const
+void AMenuMapLevelScriptActor::PlayWelcomeMessage()
 {
-	PlaybackSound->Play();
+	switch (MessageID)
+	{
+	case 0:
+		UGameplayStatics::PlaySound2D(GetWorld(), LoadObject<USoundWave>(NULL, TEXT("SoundWave'/Game/Audios/0_Welcome_to_The_Simulation.0_Welcome_to_The_Simulation'")));
+		
+		MessageID = 1;
+		GetWorldTimerManager().SetTimer(SoundPlayDelayHandle, this, &AMenuMapLevelScriptActor::PlayWelcomeMessage, 60, false);
+		break;
+	case 1:
+		if (UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation().Length() > 15000)
+			UGameplayStatics::PlaySound2D(GetWorld(), LoadObject<USoundWave>(NULL, TEXT("SoundWave'/Game/Audios/0_You_Are_Going_Too_Far.0_You_Are_Going_Too_Far'")));
+		break;
+	default:
+		return;
+	}
 }
 
 

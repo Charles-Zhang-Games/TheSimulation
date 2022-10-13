@@ -2,3 +2,8 @@
 
 
 #include "TheSimulationSaveGame.h"
+
+UTheSimulationSaveGame::UTheSimulationSaveGame()
+{
+	UnlockedLevels.Add(1);
+}

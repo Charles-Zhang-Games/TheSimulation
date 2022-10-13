@@ -15,6 +15,8 @@ class UTheSimulationSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
+	UTheSimulationSaveGame();
+	
 	UPROPERTY()
-	int PlayerLevel = 1;
+	TSet<int> UnlockedLevels;
 };

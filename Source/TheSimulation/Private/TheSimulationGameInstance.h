@@ -20,19 +20,16 @@ public:
 
 public:
 	UFUNCTION()
-	int GetPlayerLevel() const;
+	TSet<int> GetUnlockedLevels() const;
 
 	UFUNCTION()
-	void SetPlayerLevel(const int Level) const;
+	void UnlockLevel(const int Level) const;
 
 	UFUNCTION()
 	int GetLevel2Attempts() const;
 
 	UFUNCTION()
 	void SetLevel2Attempts(const int Attempts) const;
-
-public:
-	const int AvailableLevels = 3;
 
 private:
 	template<class SaveGameType>
@@ -42,6 +39,6 @@ private:
 	static void SaveGame(SaveGameType* SaveGame, const FString& SlotName);
 
 private:
-	const FString MainSaveGameSlot = TEXT("Default");
+	const FString MainSaveGameSlot = TEXT("Main");
 	const FString Level2SaveGameSlot = TEXT("Level2");
 };

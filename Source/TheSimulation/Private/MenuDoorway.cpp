@@ -48,11 +48,12 @@ void AMenuDoorway::BeginPlay()
 void AMenuDoorway::BeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto GameInstance = Cast<UTheSimulationGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	UTheSimulationGameInstance* const GameInstance = Cast<UTheSimulationGameInstance>(
+		UGameplayStatics::GetGameInstance(GetWorld()));
 	FString Left, Right;
 	LevelName.ToString().Split(" ", &Left, &Right);
 	GameInstance->CurrentGameLevel = FCString::Atoi(*Right);
-	
-	FString Name = TEXT("/Game/Maps/") + LevelName.ToString().Replace(TEXT(" "), TEXT(""));
+
+	const FString Name = TEXT("/Game/Maps/") + LevelName.ToString().Replace(TEXT(" "), TEXT(""));
 	GetWorld()->ServerTravel(Name);
 }

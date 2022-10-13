@@ -6,16 +6,16 @@
 #include "Level2SaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
-int UTheSimulationGameInstance::GetPlayerLevel() const
+TSet<int> UTheSimulationGameInstance::GetUnlockedLevels() const
 {
 	const UTheSimulationSaveGame* const SaveGame = InitializeAndLoadSaveGame<UTheSimulationSaveGame>(UTheSimulationSaveGame::StaticClass(), MainSaveGameSlot);
-	return SaveGame->PlayerLevel;
+	return SaveGame->UnlockedLevels;
 }
 
-void UTheSimulationGameInstance::SetPlayerLevel(const int Level) const
+void UTheSimulationGameInstance::UnlockLevel(const int Level) const
 {
 	UTheSimulationSaveGame* const Data = InitializeAndLoadSaveGame<UTheSimulationSaveGame>(UTheSimulationSaveGame::StaticClass(), MainSaveGameSlot);
-	Data->PlayerLevel = Level;
+	Data->UnlockedLevels.Add(Level);
 	SaveGame(Data, MainSaveGameSlot);
 }
 
